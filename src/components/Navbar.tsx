@@ -33,8 +33,8 @@ export default function Navbar() {
       >
         <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Logo */}
-          <a href="#home" className="text-white font-bold text-lg tracking-tight">
-            <span className="text-amber-400">Casa</span>Mia
+          <a href="#home" className="text-white font-black text-2xl tracking-tighter uppercase">
+            ALIVE<span className="text-emerald-400">.</span>
           </a>
 
           {/* Desktop links */}
@@ -43,7 +43,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-white/70 hover:text-white text-sm font-medium transition-colors duration-200"
+                className="text-white/70 hover:text-emerald-400 text-sm font-medium transition-colors duration-200"
               >
                 {link.label}
               </a>
@@ -54,9 +54,9 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="#reservations"
-              className="hidden md:inline-flex px-5 py-2 bg-amber-500 hover:bg-amber-400 text-black text-sm font-semibold rounded-full transition-colors duration-200"
+              className="hidden md:inline-flex px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold rounded-full transition-colors duration-200"
             >
-              Book a Table
+              Rezervări
             </a>
             <button
               onClick={() => setMobileOpen((v) => !v)}
@@ -77,14 +77,14 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-black/95 flex flex-col items-center justify-center gap-8 md:hidden"
+            className="fixed inset-0 z-40 bg-[#080d08]/98 flex flex-col items-center justify-center gap-8 md:hidden text-center"
           >
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-white text-2xl font-bold hover:text-amber-400 transition-colors"
+                className="text-white text-2xl font-bold hover:text-emerald-400 transition-colors"
               >
                 {link.label}
               </a>
@@ -92,9 +92,9 @@ export default function Navbar() {
             <a
               href="#reservations"
               onClick={() => setMobileOpen(false)}
-              className="mt-4 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-full transition-colors"
+              className="mt-4 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-full transition-colors"
             >
-              Book a Table
+              Rezervă o Masă
             </a>
           </motion.div>
         )}
