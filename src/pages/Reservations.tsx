@@ -39,7 +39,7 @@ export default function Reservations() {
   }
 
   return (
-    <section id="reservations" className="min-h-screen py-24 px-6 bg-[#040804]">
+    <section id="reservations" className="min-h-screen py-24 px-6 bg-brand-cream-100">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -49,9 +49,9 @@ export default function Reservations() {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <p className="text-emerald-400 uppercase tracking-[0.3em] text-xs font-semibold mb-3">TE AȘTEPTĂM CU DRAG</p>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">Rezervă o Masă</h2>
-          <p className="text-white/60 max-w-md mx-auto font-light text-sm">Asigură-ți locul în oaza noastră de liniște și energie. Îți vom confirma rezervarea în cel mai scurt timp.</p>
+          <p className="text-brand-green-700 uppercase tracking-[0.3em] text-xs font-bold mb-3 font-sans">TE AȘTEPTĂM CU DRAG</p>
+          <h2 className="text-4xl md:text-6xl font-extrabold text-brand-green-700 mb-4 tracking-tight font-serif lowercase">Rezervă o Masă<span className="text-brand-green-500 font-sans">.</span></h2>
+          <p className="text-brand-dark/80 max-w-md mx-auto font-light text-sm font-sans">Asigură-ți locul în oaza noastră de liniște și energie. Îți vom confirma rezervarea în cel mai scurt timp.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
@@ -63,13 +63,13 @@ export default function Reservations() {
             transition={{ duration: 0.6 }}
             className="lg:col-span-2 space-y-6"
           >
-            <div className="p-6 rounded-2xl border border-white/5 bg-white/2 space-y-5">
-              <InfoRow icon={<MapPin size={18} className="text-emerald-400" />} label="Adresă" value="Calea Victoriei 122, București" />
-              <InfoRow icon={<Clock size={18} className="text-emerald-400" />} label="Luni - Vineri" value="08:00 – 21:00" />
-              <InfoRow icon={<Clock size={18} className="text-emerald-400" />} label="Sâmbătă - Duminică" value="09:00 – 22:00" />
-              <InfoRow icon={<Phone size={18} className="text-emerald-400" />} label="Telefon" value="+40 722 000 123" />
+            <div className="p-6 rounded-2xl border border-brand-green-700/10 bg-brand-cream-200/50 space-y-5">
+              <InfoRow icon={<MapPin size={18} className="text-brand-green-700" />} label="Adresă" value="Str. Mureș nr. 116A, Timișoara (lângă Gym One 2)" />
+              <InfoRow icon={<Clock size={18} className="text-brand-green-700" />} label="Luni - Vineri" value="08:00 – 21:00" />
+              <InfoRow icon={<Clock size={18} className="text-brand-green-700" />} label="Sâmbătă - Duminică" value="09:00 – 22:00" />
+              <InfoRow icon={<Phone size={18} className="text-brand-green-700" />} label="Telefon" value="0737 263 469" />
             </div>
-            <p className="text-white/40 text-xs px-1 leading-relaxed font-light">
+            <p className="text-brand-dark/65 text-xs px-1 leading-relaxed font-light font-sans">
               Pentru grupuri mari (8+ persoane) sau organizarea de evenimente private de wellbeing, te rugăm să ne contactezi direct la numărul de telefon. Ne bucurăm să fim gazda voastră!
             </p>
           </motion.div>
@@ -86,14 +86,14 @@ export default function Reservations() {
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="h-full flex flex-col items-center justify-center text-center p-10 rounded-2xl border border-emerald-500/30 bg-emerald-500/5"
+                className="h-full flex flex-col items-center justify-center text-center p-10 rounded-2xl border border-brand-green-700/20 bg-brand-cream-200/40"
               >
                 <div className="text-4xl mb-4">🎉</div>
-                <h3 className="text-white text-xl font-bold mb-2">Solicitare Înregistrată!</h3>
-                <p className="text-white/60">Mulțumim, {form.name}! Îți vom confirma masa pe e-mail în câteva minute.</p>
+                <h3 className="text-brand-green-700 text-xl font-bold mb-2 font-serif lowercase">Solicitare Înregistrată!</h3>
+                <p className="text-brand-dark/80 font-sans">Mulțumim, {form.name}! Îți vom confirma masa pe e-mail în câteva minute.</p>
                 <button
                   onClick={() => { setSubmitted(false); setForm(initialForm) }}
-                  className="mt-6 text-sm text-emerald-400 hover:text-emerald-300 underline underline-offset-4"
+                  className="mt-6 text-sm text-brand-green-700 hover:text-brand-green-800 underline underline-offset-4 font-bold font-sans"
                 >
                   Efectuează o altă rezervare
                 </button>
@@ -107,15 +107,15 @@ export default function Reservations() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="Telefon (opțional)" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="0722 000 123" />
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-white/60 text-sm font-light">Număr de Persoane</label>
+                    <label className="text-brand-dark/80 text-sm font-semibold font-sans">Număr de Persoane</label>
                     <select
                       name="guests"
                       value={form.guests}
                       onChange={handleChange}
-                      className="bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500/60 transition-colors"
+                      className="bg-brand-cream-50 border border-brand-green-700/15 text-brand-dark rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-green-700/60 transition-colors font-sans"
                     >
                       {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-                        <option key={n} value={n} className="bg-[#050905]">{n} {n === 1 ? "oaspete" : "oaspeți"}</option>
+                        <option key={n} value={n} className="bg-brand-cream-50 text-brand-dark">{n} {n === 1 ? "oaspete" : "oaspeți"}</option>
                       ))}
                     </select>
                   </div>
@@ -123,35 +123,35 @@ export default function Reservations() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="Data" name="date" type="date" value={form.date} onChange={handleChange} required />
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-white/60 text-sm font-light">Ora Preferată</label>
+                    <label className="text-brand-dark/80 text-sm font-semibold font-sans">Ora Preferată</label>
                     <select
                       name="time"
                       value={form.time}
                       onChange={handleChange}
                       required
-                      className="bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500/60 transition-colors"
+                      className="bg-brand-cream-50 border border-brand-green-700/15 text-brand-dark rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-green-700/60 transition-colors font-sans"
                     >
-                      <option value="" disabled className="bg-[#050905]">Alege o oră</option>
+                      <option value="" disabled className="bg-brand-cream-50 text-brand-dark">Alege o oră</option>
                       {timeSlots.map((t) => (
-                        <option key={t} value={t} className="bg-[#050905]">{t}</option>
+                        <option key={t} value={t} className="bg-brand-cream-50 text-brand-dark">{t}</option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-white/60 text-sm font-light">Mențiuni Speciale / Alergii (opțional)</label>
+                  <label className="text-brand-dark/80 text-sm font-semibold font-sans">Mențiuni Speciale / Alergii (opțional)</label>
                   <textarea
                     name="notes"
                     value={form.notes}
                     onChange={handleChange}
                     rows={3}
                     placeholder="Alergii alimentare, preferințe pentru masă sau ocazii speciale..."
-                    className="bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500/60 transition-colors resize-none"
+                    className="bg-brand-cream-50 border border-brand-green-700/15 text-brand-dark rounded-xl px-4 py-3 text-sm placeholder:text-brand-dark/40 focus:outline-none focus:border-brand-green-700/60 transition-colors resize-none font-sans"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-xl transition-colors duration-200 mt-2 shadow-lg shadow-emerald-500/10"
+                  className="w-full py-4 bg-brand-green-700 hover:bg-brand-green-800 text-brand-cream-50 font-bold rounded-xl transition-all duration-200 mt-2 shadow-md shadow-brand-green-700/10"
                 >
                   Trimite Rezervarea
                 </button>
@@ -177,7 +177,7 @@ function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-white/60 text-sm font-light">{label}</label>
+      <label className="text-brand-dark/80 text-sm font-semibold font-sans">{label}</label>
       <input
         type={type}
         name={name}
@@ -185,7 +185,7 @@ function Field({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 text-sm placeholder:text-white/20 focus:outline-none focus:border-emerald-500/60 transition-colors"
+        className="bg-brand-cream-50 border border-brand-green-700/15 text-brand-dark rounded-xl px-4 py-3 text-sm placeholder:text-brand-dark/30 focus:outline-none focus:border-brand-green-700/60 transition-colors font-sans"
       />
     </div>
   )
@@ -196,8 +196,8 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
     <div className="flex items-start gap-3">
       <div className="mt-0.5 flex-shrink-0">{icon}</div>
       <div>
-        <div className="text-white/40 text-xs uppercase tracking-wider mb-0.5 font-semibold">{label}</div>
-        <div className="text-white text-sm font-light">{value}</div>
+        <div className="text-brand-green-700/60 text-xs uppercase tracking-wider mb-0.5 font-bold font-sans">{label}</div>
+        <div className="text-brand-dark text-sm font-medium font-sans">{value}</div>
       </div>
     </div>
   )

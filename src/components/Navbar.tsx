@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { List, X } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
+import Logo from "./Logo"
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -28,13 +29,13 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          scrolled ? "bg-black/80 backdrop-blur-md border-b border-white/8" : "bg-transparent"
+          scrolled ? "bg-brand-cream-50/90 backdrop-blur-md border-b border-brand-green-200/50 shadow-sm" : "bg-transparent"
         )}
       >
         <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Logo */}
-          <a href="#home" className="text-white font-black text-2xl tracking-tighter uppercase">
-            ALIVE<span className="text-emerald-400">.</span>
+          <a href="#home" className="hover:opacity-90 transition-opacity">
+            <Logo variant="transparent" size="md" className="text-brand-green-700" />
           </a>
 
           {/* Desktop links */}
@@ -43,7 +44,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-white/70 hover:text-emerald-400 text-sm font-medium transition-colors duration-200"
+                className="text-brand-green-700/80 hover:text-brand-green-900 text-sm font-semibold tracking-wider transition-colors duration-200"
               >
                 {link.label}
               </a>
@@ -54,13 +55,13 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="#reservations"
-              className="hidden md:inline-flex px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-black text-sm font-semibold rounded-full transition-colors duration-200"
+              className="hidden md:inline-flex px-5 py-2 bg-brand-green-700 hover:bg-brand-green-800 text-brand-cream-50 text-sm font-semibold rounded-full transition-all duration-200 shadow-md shadow-brand-green-700/10"
             >
               Rezervări
             </a>
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="md:hidden text-white p-1"
+              className="md:hidden text-brand-green-700 p-1"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X size={24} /> : <List size={24} />}
@@ -77,14 +78,14 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-[#080d08]/98 flex flex-col items-center justify-center gap-8 md:hidden text-center"
+            className="fixed inset-0 z-40 bg-brand-cream-50/98 flex flex-col items-center justify-center gap-8 md:hidden text-center"
           >
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-white text-2xl font-bold hover:text-emerald-400 transition-colors"
+                className="text-brand-green-700 text-2xl font-bold hover:text-brand-green-900 transition-colors"
               >
                 {link.label}
               </a>
@@ -92,7 +93,7 @@ export default function Navbar() {
             <a
               href="#reservations"
               onClick={() => setMobileOpen(false)}
-              className="mt-4 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-full transition-colors"
+              className="mt-4 px-8 py-3 bg-brand-green-700 hover:bg-brand-green-800 text-brand-cream-50 font-semibold rounded-full transition-colors shadow-lg"
             >
               Rezervă o Masă
             </a>

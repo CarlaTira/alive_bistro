@@ -1,25 +1,26 @@
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { Coffee, Leaf, Users, Sparkles, Compass, Heart, Eye } from "lucide-react"
+import aliveLogo from "../assets/Group of 7 Objectslogo verde svg.svg"
 
 const brandValues = [
   {
-    icon: <Compass className="w-8 h-8 text-emerald-400" />,
+    icon: <Compass className="w-8 h-8 text-brand-green-700" />,
     title: "Echilibru",
     text: "Mâncare reală, gustoasă și echilibrată. Un echilibru fin între gust excepțional, energie de durată și valoare nutritivă reală, fără dogme sau restricții rigide.",
   },
   {
-    icon: <Heart className="w-8 h-8 text-emerald-400" />,
+    icon: <Heart className="w-8 h-8 text-brand-green-700" />,
     title: "Educație & Lifestyle",
     text: "Prin brunch-uri tematice, evenimente educaționale de wellness și discuții deschise despre nutriție, te susținem să îți construiești obiceiuri zilnice mai bune.",
   },
   {
-    icon: <Users className="w-8 h-8 text-emerald-400" />,
+    icon: <Users className="w-8 h-8 text-brand-green-700" />,
     title: "Comunitate & Conexiune",
     text: "Mai mult decât un restaurant. Oferim un spațiu primitor pentru socializare, lucru productiv, relaxare sau o simplă pauză revigorantă de la agitația cotidiană.",
   },
   {
-    icon: <Eye className="w-8 h-8 text-emerald-400" />,
+    icon: <Eye className="w-8 h-8 text-brand-green-700" />,
     title: "Transparență & Autenticitate",
     text: "Folosim ingrediente premium, de sezon, și rețete curate. Îți spunem exact ce conține mâncarea și băutura ta: de la cafea de specialitate la suplimente active.",
   },
@@ -50,14 +51,14 @@ function ParallaxHero() {
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
 
   return (
-    <section ref={ref} className="relative h-screen overflow-hidden flex items-center justify-center bg-[#070b07]">
+    <section ref={ref} className="relative h-screen overflow-hidden flex items-start justify-center pt-28 md:pt-36 bg-brand-cream-100">
       {/* Background with warm overlay */}
       <motion.div
         style={{ y }}
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center scale-110 opacity-75"
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center scale-110 opacity-30"
       />
-      {/* Botanical/Natural Warm Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-[#080d08]" />
+      {/* Botanical/Natural Warm Overlay matching flyer layout */}
+      <div className="absolute inset-0 bg-gradient-to-b from-brand-cream-100/40 via-brand-cream-100/75 to-brand-cream-100" />
 
       {/* Hero content */}
       <motion.div style={{ opacity }} className="relative z-10 text-center px-6 max-w-4xl">
@@ -65,28 +66,31 @@ function ParallaxHero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs uppercase tracking-[0.2em] font-medium mb-6"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green-700/10 border border-brand-green-700/20 text-brand-green-800 text-xs uppercase tracking-[0.2em] font-bold mb-6 font-sans"
         >
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5 text-brand-green-700" />
           Un Nou Concept de Bistro Modern
         </motion.div>
         
-        <motion.h1
+        <motion.img
+          src={aliveLogo}
+          alt="Alive Bistro"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-black text-white leading-none mb-6 tracking-tight"
-        >
-          ALIVE<span className="text-emerald-400">.</span>
-        </motion.h1>
+          className="w-64 md:w-96 mx-auto mb-6"
+        />
         
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-white/90 text-lg md:text-2xl mb-12 max-w-2xl mx-auto font-light leading-relaxed"
+          className="text-brand-dark/90 text-2xl md:text-4xl mb-12 max-w-2xl mx-auto leading-relaxed font-dancing"
         >
-          Echilibrul perfect între <span className="text-emerald-300 font-medium">mâncare nutritivă</span>, <span className="text-emerald-300 font-medium">cafea de specialitate</span> și <span className="text-emerald-300 font-medium font-serif italic">comunitate</span>.
+          Echilibrul perfect între{" "}
+          <span className="text-brand-green-800">mâncare nutritivă</span>,{" "}
+          <span className="text-brand-green-800">cafea de specialitate</span>{" "}
+          și <span className="text-brand-green-700">comunitate</span>.
         </motion.p>
         
         <motion.div
@@ -97,13 +101,13 @@ function ParallaxHero() {
         >
           <a
             href="#menu"
-            className="w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-black font-semibold rounded-full transition-all duration-200 shadow-lg shadow-emerald-500/20 text-center"
+            className="w-full sm:w-auto px-8 py-4 bg-brand-green-700 hover:bg-brand-green-800 active:bg-brand-green-900 text-brand-cream-50 font-bold rounded-full transition-all duration-200 shadow-md shadow-brand-green-700/15 text-center"
           >
             Explorează Meniul
           </a>
           <a
             href="#reservations"
-            className="w-full sm:w-auto px-8 py-4 border border-white/20 hover:bg-white/5 text-white font-semibold rounded-full transition-all duration-200 text-center"
+            className="w-full sm:w-auto px-8 py-4 border border-brand-green-700/30 hover:bg-brand-green-700/5 text-brand-green-700 font-bold rounded-full transition-all duration-200 text-center"
           >
             Rezervă o masă
           </a>
@@ -114,10 +118,10 @@ function ParallaxHero() {
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/40 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-brand-green-700/50 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] uppercase tracking-[0.3em] font-medium">Scroll down</span>
-        <div className="w-px h-10 bg-gradient-to-b from-white/40 to-transparent" />
+        <span className="text-[10px] uppercase tracking-[0.3em] font-bold font-sans">Scroll down</span>
+        <div className="w-px h-10 bg-gradient-to-b from-brand-green-700/40 to-transparent" />
       </motion.div>
     </section>
   )
@@ -125,7 +129,7 @@ function ParallaxHero() {
 
 function BrandStorySection() {
   return (
-    <section className="py-24 md:py-32 px-6 bg-[#080d08]">
+    <section className="py-24 md:py-32 px-6 bg-brand-cream-100">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
@@ -136,16 +140,16 @@ function BrandStorySection() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <span className="text-emerald-400 uppercase tracking-[0.25em] text-xs font-semibold block mb-3">
+            <span className="text-brand-green-700 uppercase tracking-[0.25em] text-xs font-bold block mb-3 font-sans">
               Conceptul Nostru / Despre Alive
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight leading-tight">
-              Mâncare cu sens, stare de bine și energie zilnică
+            <h2 className="text-4xl md:text-6xl font-extrabold text-brand-green-700 mb-8 tracking-tight leading-tight font-serif lowercase">
+              Mâncare cu sens, stare de bine și energie zilnică<span className="text-brand-green-500 font-sans">.</span>
             </h2>
             
-            <div className="space-y-6 text-white/70 text-base md:text-lg leading-relaxed font-light">
+            <div className="space-y-6 text-brand-dark/80 text-base md:text-lg leading-relaxed font-light font-sans">
               <p>
-                <strong className="text-white font-medium">Alive</strong> este un concept de Bistro modern construit în jurul ideii de echilibru între mâncare bună, cafea de specialitate, băuturi funcționale, energie, stil de viață sănătos și comunitate.
+                <strong className="text-brand-dark font-semibold">Alive</strong> este un concept de Bistro modern construit în jurul ideii de echilibru între mâncare bună, cafea de specialitate, băuturi funcționale, energie, stil de viață sănătos și comunitate.
               </p>
               <p>
                 Nu ne dorim să construim încă un local „healthy” rigid sau elitist, ci un spațiu cald, accesibil și autentic, în care oamenii să poată integra mai natural obiceiuri mai bune în viața lor de zi cu zi.
@@ -156,23 +160,23 @@ function BrandStorySection() {
             </div>
             
             {/* Embedded highlights */}
-            <div className="grid grid-cols-2 gap-6 mt-10 pt-8 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-6 mt-10 pt-8 border-t border-brand-green-700/10">
               <div className="flex gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-emerald-400">
+                <div className="w-10 h-10 rounded-lg bg-brand-green-700/10 flex items-center justify-center flex-shrink-0 text-brand-green-700">
                   <Coffee className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-white font-semibold text-sm">Specialty Coffee</h4>
-                  <p className="text-white/40 text-xs mt-1">Origine unică și preparare cu pasiune</p>
+                  <h4 className="text-brand-dark font-bold text-sm font-sans">Specialty Coffee</h4>
+                  <p className="text-brand-green-700/60 text-xs mt-1 font-sans">Origine unică și preparare cu pasiune</p>
                 </div>
               </div>
               <div className="flex gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-emerald-400">
+                <div className="w-10 h-10 rounded-lg bg-brand-green-700/10 flex items-center justify-center flex-shrink-0 text-brand-green-700">
                   <Leaf className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-white font-semibold text-sm">Nutriție Curată</h4>
-                  <p className="text-white/40 text-xs mt-1">Ingrediente proaspete, rețete echilibrate</p>
+                  <h4 className="text-brand-dark font-bold text-sm font-sans">Nutriție Curată</h4>
+                  <p className="text-brand-green-700/60 text-xs mt-1 font-sans font-light">Ingrediente proaspete, rețete echilibrate</p>
                 </div>
               </div>
             </div>
@@ -187,30 +191,30 @@ function BrandStorySection() {
             className="grid grid-cols-12 gap-4 relative"
           >
             {/* Background glowing ambient light to represent warmth */}
-            <div className="absolute -inset-10 bg-emerald-500/5 filter blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute -inset-10 bg-brand-green-700/5 filter blur-3xl rounded-full pointer-events-none" />
 
-            <div className="col-span-8 overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+            <div className="col-span-8 overflow-hidden rounded-2xl border border-brand-green-700/10 shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80"
                 alt="Alive Interior Cozy Space"
                 className="w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="col-span-4 overflow-hidden rounded-2xl border border-white/10 shadow-2xl mt-12">
+            <div className="col-span-4 overflow-hidden rounded-2xl border border-brand-green-700/10 shadow-2xl mt-12">
               <img
                 src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=500&q=80"
                 alt="Specialty Coffee"
                 className="w-full h-44 object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="col-span-5 overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+            <div className="col-span-5 overflow-hidden rounded-2xl border border-brand-green-700/10 shadow-2xl">
               <img
                 src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80"
                 alt="Healthy Balanced Bowl"
                 className="w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <div className="col-span-7 overflow-hidden rounded-2xl border border-white/10 shadow-2xl -mt-6">
+            <div className="col-span-7 overflow-hidden rounded-2xl border border-brand-green-700/10 shadow-2xl -mt-6">
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
                 alt="Socializing & Studying at Alive"
@@ -227,14 +231,14 @@ function BrandStorySection() {
 
 function PillarsSection() {
   return (
-    <section className="py-20 px-6 bg-[#060a06] border-t border-white/5">
+    <section className="py-20 px-6 bg-brand-cream-200 border-t border-brand-green-700/5">
       <div className="max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-emerald-400 uppercase tracking-widest text-xs font-semibold block mb-2">
+          <span className="text-brand-green-700 uppercase tracking-widest text-xs font-bold block mb-2 font-sans">
             Ce Vei Descoperi la Alive
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-            Mai mult decât un bistro: un stil de viață
+          <h2 className="text-3xl md:text-5xl font-bold text-brand-green-700 tracking-tight font-serif lowercase">
+            Mai mult decât un bistro: un stil de viață<span className="text-brand-green-500 font-sans">.</span>
           </h2>
         </div>
 
@@ -246,7 +250,7 @@ function PillarsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="bg-white/2 rounded-2xl border border-white/5 overflow-hidden hover:border-emerald-500/20 hover:bg-white/3 transition-all duration-300 group"
+              className="bg-brand-cream-100 rounded-2xl border border-brand-green-700/10 overflow-hidden hover:border-brand-green-700/30 hover:bg-brand-cream-50 transition-all duration-300 group"
             >
               <div className="h-48 overflow-hidden relative">
                 <img
@@ -254,13 +258,13 @@ function PillarsSection() {
                   alt={pillar.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">
+                <h3 className="text-xl font-bold text-brand-green-700 mb-2 group-hover:text-brand-green-800 transition-colors font-serif lowercase">
                   {pillar.title}
                 </h3>
-                <p className="text-white/60 text-sm leading-relaxed font-light">
+                <p className="text-brand-dark/70 text-sm leading-relaxed font-light font-sans">
                   {pillar.desc}
                 </p>
               </div>
@@ -274,7 +278,7 @@ function PillarsSection() {
 
 function ValuesSection() {
   return (
-    <section className="py-24 md:py-32 px-6 bg-[#080d08] border-t border-white/5">
+    <section className="py-24 md:py-32 px-6 bg-brand-cream-100 border-t border-brand-green-700/5">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -284,14 +288,14 @@ function ValuesSection() {
           transition={{ duration: 0.7 }}
           className="text-center max-w-3xl mx-auto mb-20"
         >
-          <span className="text-emerald-400 uppercase tracking-[0.25em] text-xs font-semibold block mb-3">
+          <span className="text-brand-green-700 uppercase tracking-[0.25em] text-xs font-bold block mb-3 font-sans">
             Misiune și Valori
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            În ce credem noi?
+          <h2 className="text-4xl md:text-6xl font-bold text-brand-green-700 mb-6 tracking-tight font-serif lowercase">
+            În ce credem noi?<span className="text-brand-green-500 font-sans">.</span>
           </h2>
-          <p className="text-white/70 text-lg font-light leading-relaxed">
-            Misiunea <strong className="text-emerald-300 font-medium">Alive</strong> este să facă stilul de viață sănătos să pară mai firesc, mai echilibrat și mai sustenabil. Credem în mâncare reală, suplimente nutritive, ingrediente de calitate și experiențe care îi fac pe oameni să se simtă bine și în armonie cu ei înșiși.
+          <p className="text-brand-dark/80 text-lg font-light leading-relaxed font-sans">
+            Misiunea <strong className="text-brand-green-700 font-semibold">Alive</strong> este să facă stilul de viață sănătos să pară mai firesc, mai echilibrat și mai sustenabil. Credem în mâncare reală, suplimente nutritive, ingrediente de calitate și experiențe care îi fac pe oameni să se simtă bine și în armonie cu ei înșiși.
           </p>
         </motion.div>
 
@@ -304,14 +308,14 @@ function ValuesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="p-8 rounded-2xl border border-white/5 bg-white/2 hover:border-emerald-500/25 hover:bg-white/3 transition-all duration-300 flex gap-6"
+              className="p-8 rounded-2xl border border-brand-green-700/10 bg-brand-cream-50 hover:border-brand-green-700/25 hover:bg-white/80 transition-all duration-300 flex gap-6"
             >
-              <div className="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-14 h-14 rounded-xl bg-brand-green-700/10 flex items-center justify-center flex-shrink-0 text-brand-green-700">
                 {value.icon}
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
-                <p className="text-white/60 text-sm leading-relaxed font-light">{value.text}</p>
+                <h3 className="text-xl font-bold text-brand-green-700 mb-2 font-serif lowercase">{value.title}</h3>
+                <p className="text-brand-dark/70 text-sm leading-relaxed font-light font-sans">{value.text}</p>
               </div>
             </motion.div>
           ))}

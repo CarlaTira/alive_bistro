@@ -1,5 +1,37 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-script: "Mr De Haviland", cursive;
+  --font-handwritten: "Mr De Haviland", cursive;
+  --font-satisfy: "Satisfy", cursive;
+  --font-great-vibes: "Great Vibes", cursive;
+  --font-dancing: "Dancing Script", cursive;
+
+  /* Primary Forest / Olive green palette inspired by the flyer logo and blocks */
+  --color-brand-green-50: #f4f6f3;
+  --color-brand-green-100: #e4ece1;
+  --color-brand-green-200: #c9dac5;
+  --color-brand-green-300: #a3be9e;
+  --color-brand-green-400: #7a9c76;
+  --color-brand-green-500: #557952;
+  --color-brand-green-600: #425f3f;
+  --color-brand-green-700: #364e35; /* Signature brand green */
+  --color-brand-green-800: #2d3f2c;
+  --color-brand-green-900: #263326;
+
+  /* Secondary Cream/Beige tone palette matching the flyer light backgrounds */
+  --color-brand-cream-50: #faf8f5;  /* Extremely light fresh milk white */
+  --color-brand-cream-100: #f5f2eb; /* Warm signature cream background */
+  --color-brand-cream-200: #ede7df; /* Cream dark (contrast cards) */
+  --color-brand-cream-300: #ded7cb;
+  --color-brand-cream-400: #cbbfb3;
+
+  /* High contrast typography color (dark forest charcoal) */
+  --color-brand-dark: #222921;
+}
+
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;
@@ -14,8 +46,12 @@
   }
 
   body {
-    font-family: var(--font-sans, system-ui, sans-serif);
-    background-color: #0a0a0a;
-    color: #f5f0eb;
+    font-family: var(--font-sans);
+    background-color: #f5f2eb; /* Main flyer cream */
+    color: #222921;            /* Warm deep charcoal / text color */
+  }
+
+  h1, h2, h3, .font-serif-brand {
+    font-family: var(--font-serif);
   }
 }
