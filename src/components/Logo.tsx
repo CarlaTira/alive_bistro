@@ -43,7 +43,7 @@ export default function Logo({
         viewBox="0 0 31.48 16.36"
         xmlns="http://www.w3.org/2000/svg"
         xmlSpace="preserve"
-        style={{ shapeRendering: "geometricPrecision", textRendering: "geometricPrecision", imageRendering: "optimizeQuality" }}
+        style={{ shapeRendering: "geometricPrecision", textRendering: "geometricPrecision", imageRendering: "auto" }}
         className={cn(
           "w-full h-auto",
           !isBadge && textOnlySizeClasses[size]

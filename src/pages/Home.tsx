@@ -69,7 +69,7 @@ function ParallaxHero() {
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green-700/10 border border-brand-green-700/20 text-brand-green-800 text-xs uppercase tracking-[0.2em] font-bold mb-6 font-sans"
         >
           <Sparkles className="w-3.5 h-3.5 text-brand-green-700" />
-          Un Nou Concept de Bistro Modern
+          Un Concept Nou de Bistro
         </motion.div>
         
         <motion.img
