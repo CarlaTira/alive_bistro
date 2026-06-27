@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ForkKnife, Cookie } from "@phosphor-icons/react"
-import { Coffee as LucideCoffee, Leaf, Flame, Beef, Wheat, Nut } from "lucide-react"
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react"
+import { ForkKnife, Cookie, Coffee, Egg, Wine, TeaBag, Drop, Carrot } from "@phosphor-icons/react"
+import { Coffee as LucideCoffee, Leaf, Flame, Beef, Wheat, Nut, X, Plus, Info, ChevronLeft, ChevronRight } from "lucide-react"
 
 type MenuItem = {
   name: string
@@ -24,12 +25,24 @@ type MenuCategory = {
   items: MenuItem[]
 }
 
-const menuData: MenuCategory[] = [
+type MenuGroup = {
+  id: "food" | "drinks"
+  label: string
+  icon: React.ReactNode
+  categories: MenuCategory[]
+}
+
+const menuData: MenuGroup[] = [
   {
-    id: "breakfast-soups",
-    label: "Breakfast & Supe",
+    id: "food",
+    label: "Mâncare",
     icon: <ForkKnife size={20} />,
-    items: [
+    categories: [
+      {
+        id: "breakfast-soups",
+        label: "Mic Dejun & Supe",
+        icon: <Egg size={18} />,
+        items: [
       { 
         name: "Avocado Toast cu Ou Poșat", 
         description: "Pâine artizanală cu maia, avocado cremos, ou bio poșat, fulgi de chilli rubinii și semințe active hidratate.", 
@@ -129,11 +142,18 @@ const menuData: MenuCategory[] = [
       },
     ],
   },
+    ],
+  },
   {
     id: "drinks",
-    label: "Băuturi Funcționale & Cafea",
-    icon: <LucideCoffee size={20} className="text-brand-green-700" />,
-    items: [
+    label: "Băuturi",
+    icon: <Coffee size={20} />,
+    categories: [
+      {
+        id: "coffee-functional",
+        label: "Cafea & Funcționale",
+        icon: <LucideCoffee size={18} className="text-brand-green-700" />,
+        items: [
       { 
         name: "Flat White de Origine", 
         description: "Espresso dublu preparat meticulos din boabe de origine unică selecționate (Etiopia/Columbia), servit cu lapte cremos organic de ovăz.", 
@@ -165,6 +185,163 @@ const menuData: MenuCategory[] = [
         tag: "Energy",
         macros: { calories: 270, protein: "18g", carbs: "22g", fat: "6g" }
       },
+        ],
+      },
+      {
+        id: "teas",
+        label: "Ceaiuri & Infuzii",
+        icon: <TeaBag size={18} />,
+        items: [
+          {
+            name: "Ceai Verde Sencha",
+            description: "Frunze japoneze de sencha infuzate la temperatură blândă, cu note proaspete de iarbă verde și un finish delicat umami.",
+            price: "14 RON",
+            image: "https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 2, protein: "0g", carbs: "0g", fat: "0g" }
+          },
+          {
+            name: "Infuzie Mușețel & Lavandă",
+            description: "Amestec calmant de flori de mușețel bio și lavandă de Provence, perfect pentru momente de relaxare.",
+            price: "14 RON",
+            image: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=300&q=80",
+            tag: "Relaxare",
+            macros: { calories: 3, protein: "0g", carbs: "1g", fat: "0g" }
+          },
+          {
+            name: "Chai Latte Picant",
+            description: "Ceai negru Assam fiert lent cu scorțișoară, cardamom și ghimbir, completat cu lapte cremos spumat de ovăz.",
+            price: "18 RON",
+            image: "https://images.unsplash.com/photo-1578374173705-969cbe6f2d6b?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 160, protein: "4g", carbs: "24g", fat: "4g" }
+          },
+          {
+            name: "Ceai de Ghimbir & Lămâie",
+            description: "Infuzie energizantă din ghimbir proaspăt ras, lămâie stoarsă la rece și un strop de miere polifloră.",
+            price: "15 RON",
+            image: "https://images.unsplash.com/photo-1597318181409-cf64d0b5d8a2?auto=format&fit=crop&w=300&q=80",
+            tag: "Wellness Boost",
+            macros: { calories: 45, protein: "0g", carbs: "11g", fat: "0g" }
+          },
+        ],
+      },
+      {
+        id: "soft-drinks",
+        label: "Răcoritoare",
+        icon: <Drop size={18} />,
+        items: [
+          {
+            name: "Kombucha de Casă",
+            description: "Ceai fermentat artizanal, bogat în probiotice naturale, cu un finish efervescent de fructe de pădure.",
+            price: "16 RON",
+            image: "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?auto=format&fit=crop&w=300&q=80",
+            tag: "Probiotic",
+            macros: { calories: 30, protein: "0g", carbs: "7g", fat: "0g" }
+          },
+          {
+            name: "Limonadă cu Mentă",
+            description: "Lămâi proaspăt stoarse, sirop natural de agave și mentă pisată, servită cu gheață din belșug.",
+            price: "14 RON",
+            image: "https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9e?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 90, protein: "0g", carbs: "22g", fat: "0g" }
+          },
+          {
+            name: "Apă cu Castravete & Lime",
+            description: "Apă minerală naturală infuzată cu felii de castravete crocant și lime proaspăt, perfect răcoritoare.",
+            price: "12 RON",
+            image: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?auto=format&fit=crop&w=300&q=80",
+            tag: "Hidratare",
+            macros: { calories: 5, protein: "0g", carbs: "1g", fat: "0g" }
+          },
+          {
+            name: "Soda Artizanală de Soc",
+            description: "Sirop de flori de soc cules manual, completat cu apă minerală pétillante și o felie de lămâie.",
+            price: "14 RON",
+            image: "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 70, protein: "0g", carbs: "17g", fat: "0g" }
+          },
+        ],
+      },
+      {
+        id: "non-alcoholic",
+        label: "Mocktails & Sucuri",
+        icon: <Carrot size={18} />,
+        items: [
+          {
+            name: "Suc Proaspăt de Portocale",
+            description: "Portocale presate la rece în fața ta, 100% natural, fără adaos de zahăr sau conservanți.",
+            price: "16 RON",
+            image: "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 110, protein: "2g", carbs: "26g", fat: "0g" }
+          },
+          {
+            name: "Green Detox Juice",
+            description: "Țelină, măr verde, castravete, spanac proaspăt și un strop de ghimbir, presate la rece.",
+            price: "18 RON",
+            image: "https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=300&q=80",
+            tag: "Detox",
+            macros: { calories: 95, protein: "2g", carbs: "21g", fat: "0g" }
+          },
+          {
+            name: "Virgin Mojito",
+            description: "Lime proaspăt, mentă pisată, sirop de trestie și sodă efervescentă, un clasic răcoritor fără alcool.",
+            price: "18 RON",
+            image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 120, protein: "0g", carbs: "29g", fat: "0g" }
+          },
+          {
+            name: "Sunset Mocktail",
+            description: "Piure de mango, suc de citrice proaspete, rozmarin și apă tonică, un cocktail vibrant fără alcool.",
+            price: "20 RON",
+            image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=300&q=80",
+            tag: "Must Try",
+            macros: { calories: 140, protein: "1g", carbs: "33g", fat: "0g" }
+          },
+        ],
+      },
+      {
+        id: "alcoholic",
+        label: "Vinuri & Bere",
+        icon: <Wine size={18} />,
+        items: [
+          {
+            name: "Vin Natural Alb (pahar)",
+            description: "Selecție de vin alb natural, biodinamic, cu aciditate vie și note florale delicate (150ml).",
+            price: "28 RON",
+            image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 120, protein: "0g", carbs: "4g", fat: "0g" }
+          },
+          {
+            name: "Vin Roșu Biodinamic (pahar)",
+            description: "Vin roșu cu fermentație spontană, tanini fini și aromă intensă de fructe de pădure (150ml).",
+            price: "30 RON",
+            image: "https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 125, protein: "0g", carbs: "4g", fat: "0g" }
+          },
+          {
+            name: "Bere Artizanală IPA",
+            description: "Bere artizanală locală, hamei aromat și o amăreală echilibrată, nefiltrată (330ml).",
+            price: "22 RON",
+            image: "https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=300&q=80",
+            tag: "Craft",
+            macros: { calories: 210, protein: "2g", carbs: "18g", fat: "0g" }
+          },
+          {
+            name: "Aperol Spritz",
+            description: "Aperol, prosecco rece și un strop de sodă, garnisit cu o felie generoasă de portocală.",
+            price: "26 RON",
+            image: "https://images.unsplash.com/photo-1560512823-829485b8bf24?auto=format&fit=crop&w=300&q=80",
+            macros: { calories: 180, protein: "0g", carbs: "22g", fat: "0g" }
+          },
+          {
+            name: "Mimosa de Brunch",
+            description: "Prosecco rece și suc proaspăt de portocale stoarse, perfect pentru un brunch lejer de weekend.",
+            price: "24 RON",
+            image: "https://images.unsplash.com/photo-1541557435984-1c79685a082b?auto=format&fit=crop&w=300&q=80",
+            tag: "Brunch",
+            macros: { calories: 130, protein: "1g", carbs: "14g", fat: "0g" }
+          },
+        ],
+      },
     ],
   },
 ]
@@ -178,14 +355,129 @@ const tagColors: Record<string, string> = {
   "Beauty Tonic": "bg-pink-100 text-pink-800 font-bold",
   Recovery: "bg-blue-100 text-blue-800 font-bold",
   Energy: "bg-amber-100 text-amber-800 font-bold",
+  Detox: "bg-brand-green-100 text-brand-green-800 font-bold",
+  Relaxare: "bg-purple-100 text-purple-800 font-bold",
+  Probiotic: "bg-teal-100 text-teal-800 font-bold",
+  Hidratare: "bg-blue-100 text-blue-800 font-bold",
+  Craft: "bg-amber-100 text-amber-800 font-bold",
+  Brunch: "bg-orange-100 text-orange-800 font-bold",
+}
+
+function CategoryBar({
+  categories,
+  activeCategory,
+  onSelect,
+}: {
+  categories: MenuCategory[]
+  activeCategory: string
+  onSelect: (id: string) => void
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [canLeft, setCanLeft] = useState(false)
+  const [canRight, setCanRight] = useState(false)
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    setCanLeft(el.scrollLeft > 4)
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4)
+  }, [])
+
+  useEffect(() => {
+    updateArrows()
+    window.addEventListener("resize", updateArrows)
+    return () => window.removeEventListener("resize", updateArrows)
+  }, [updateArrows, categories])
+
+  const scrollByAmount = (dir: 1 | -1) => {
+    scrollRef.current?.scrollBy({ left: dir * 260, behavior: "smooth" })
+  }
+
+  return (
+    <div className="relative w-screen ml-[50%] -translate-x-1/2 mb-10 bg-brand-cream-200/60 border-y border-brand-green-700/10 shadow-inner shadow-brand-green-700/5">
+      <div
+        ref={scrollRef}
+        onScroll={updateArrows}
+        className="flex gap-2.5 overflow-x-auto py-3 px-6 md:px-10 scroll-pl-6 md:scroll-pl-10 scroll-pr-6 md:scroll-pr-10 snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={(e) => {
+              onSelect(cat.id)
+              e.currentTarget.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" })
+            }}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap flex-shrink-0 snap-start transition-all duration-200 font-sans ${
+              activeCategory === cat.id
+                ? "bg-brand-green-700 text-brand-cream-50 shadow-md shadow-brand-green-700/15"
+                : "border border-brand-green-700/10 text-brand-green-700/80 bg-brand-cream-50/70 hover:border-brand-green-700/30 hover:text-brand-green-700 hover:bg-brand-cream-50"
+            }`}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Left fade + arrow: shown when there are hidden items to the left */}
+      <AnimatePresence>
+        {canLeft && (
+          <motion.button
+            type="button"
+            onClick={() => scrollByAmount(-1)}
+            aria-label="Derulează la stânga"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-y-0 left-0 flex items-center pl-3 pr-10 bg-gradient-to-r from-brand-cream-200 via-brand-cream-200/90 to-transparent"
+          >
+            <span className="w-9 h-9 rounded-full bg-brand-cream-50 border border-brand-green-700/15 shadow-sm flex items-center justify-center text-brand-green-700">
+              <ChevronLeft className="w-4 h-4" />
+            </span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Right fade + arrow: shown when there are hidden items to the right */}
+      <AnimatePresence>
+        {canRight && (
+          <motion.button
+            type="button"
+            onClick={() => scrollByAmount(1)}
+            aria-label="Derulează la dreapta"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-y-0 right-0 flex items-center justify-end pr-3 pl-10 bg-gradient-to-l from-brand-cream-200 via-brand-cream-200/90 to-transparent"
+          >
+            <span className="w-9 h-9 rounded-full bg-brand-cream-50 border border-brand-green-700/15 shadow-sm flex items-center justify-center text-brand-green-700">
+              <ChevronRight className="w-4 h-4" />
+            </span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+    </div>
+  )
 }
 
 export default function Menu() {
-  const [activeCategory, setActiveCategory] = useState(menuData[0].id)
-  const activeMenu = menuData.find((c) => c.id === activeCategory)!
+  const [activeGroup, setActiveGroup] = useState<MenuGroup["id"]>("food")
+  const [activeCategory, setActiveCategory] = useState(menuData[0].categories[0].id)
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
+
+  const activeGroupObj = menuData.find((g) => g.id === activeGroup)!
+  const activeCategoryObj =
+    activeGroupObj.categories.find((c) => c.id === activeCategory) ?? activeGroupObj.categories[0]
+
+  const handleGroupChange = (groupId: MenuGroup["id"]) => {
+    if (groupId === activeGroup) return
+    const group = menuData.find((g) => g.id === groupId)!
+    setActiveGroup(groupId)
+    setActiveCategory(group.categories[0].id)
+  }
 
   return (
-    <section id="menu" className="min-h-screen py-24 px-6 bg-brand-cream-100">
+    <section id="menu" className="min-h-screen py-24 px-6 bg-brand-cream-100 overflow-x-clip">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -202,23 +494,42 @@ export default function Menu() {
           </p>
         </motion.div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {menuData.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 font-sans ${
-                activeCategory === cat.id
-                  ? "bg-brand-green-700 text-brand-cream-50 shadow-md shadow-brand-green-700/15 scale-102"
-                  : "border border-brand-green-700/10 text-brand-green-700/80 bg-brand-cream-50/50 hover:border-brand-green-700/30 hover:text-brand-green-700 hover:bg-brand-cream-200/50"
-              }`}
-            >
-              {cat.icon}
-              {cat.label}
-            </button>
-          ))}
+        {/* Group toggle (Food / Drinks) */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex p-1.5 rounded-full bg-brand-cream-200/60 border border-brand-green-700/10">
+            {menuData.map((group) => (
+              <button
+                key={group.id}
+                onClick={() => handleGroupChange(group.id)}
+                className={`flex items-center gap-2 px-7 py-2.5 rounded-full text-sm font-bold transition-all duration-200 font-sans ${
+                  activeGroup === group.id
+                    ? "bg-brand-green-700 text-brand-cream-50 shadow-md shadow-brand-green-700/20"
+                    : "text-brand-green-700/70 hover:text-brand-green-700"
+                }`}
+              >
+                {group.icon}
+                {group.label}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {/* Category chips — full-width bar with dynamic scroll arrows */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeGroup}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <CategoryBar
+              categories={activeGroupObj.categories}
+              activeCategory={activeCategory}
+              onSelect={setActiveCategory}
+            />
+          </motion.div>
+        </AnimatePresence>
 
         {/* Menu Items */}
         <AnimatePresence mode="wait">
@@ -230,39 +541,44 @@ export default function Menu() {
             transition={{ duration: 0.35 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
-            {activeMenu.items.map((item, i) => (
-              <motion.div
+            {activeCategoryObj.items.map((item, i) => (
+              <motion.button
+                type="button"
+                onClick={() => setSelectedItem(item)}
                 key={item.name}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.07 }}
-                className="flex items-start gap-4 p-4 md:p-5 rounded-2xl border border-brand-green-700/10 bg-brand-cream-50 hover:bg-white hover:shadow-md hover:border-brand-green-700/25 transition-all duration-300 group"
+                className="text-left w-full cursor-pointer flex flex-col overflow-hidden rounded-2xl border border-brand-green-700/10 bg-brand-cream-50 hover:bg-white hover:shadow-lg hover:border-brand-green-700/25 transition-all duration-300 group"
               >
                 {item.image && (
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0 border border-brand-green-700/10 group-hover:border-brand-green-700/25 transition-colors">
+                  <div className="relative w-full aspect-[4/3] overflow-hidden">
                     <img
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
+                    {item.tag && (
+                      <span className={`absolute top-3 left-3 text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider shadow-sm ${tagColors[item.tag] ?? "bg-brand-cream-200 text-brand-dark/60"}`}>
+                        {item.tag}
+                      </span>
+                    )}
+                    {/* Click-for-details hint, revealed on hover */}
+                    <span className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-cream-50/90 backdrop-blur text-brand-green-700 text-[11px] font-bold shadow-sm opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                      <Plus className="w-3.5 h-3.5" /> Detalii
+                    </span>
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-brand-dark font-bold group-hover:text-brand-green-700 transition-colors text-sm sm:text-base font-serif lowercase">{item.name}</h3>
-                      {item.tag && (
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${tagColors[item.tag] ?? "bg-brand-cream-200 text-brand-dark/60"}`}>
-                          {item.tag}
-                        </span>
-                      )}
-                    </div>
+
+                <div className="flex flex-col flex-1 p-4 md:p-5">
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <h3 className="text-brand-dark font-bold group-hover:text-brand-green-700 transition-colors text-sm sm:text-base font-serif lowercase leading-tight">{item.name}</h3>
                     <span className="text-brand-green-700 font-bold text-xs sm:text-sm whitespace-nowrap">{item.price}</span>
                   </div>
 
-                  {/* Macronutrients & Calories badge indicator directly between title and description */}
+                  {/* Macronutrients & Calories badges */}
                   {item.macros && (
-                    <div className="flex flex-wrap gap-2 mb-2.5 text-xs sm:text-sm">
+                    <div className="flex flex-wrap gap-2 text-xs sm:text-sm">
                       <span className="px-2.5 py-1 rounded bg-brand-green-700/10 text-brand-green-700 font-bold flex items-center gap-1.5 border border-brand-green-700/10">
                         <Flame className="w-3.5 h-3.5" /> {item.macros.calories} kcal
                       </span>
@@ -278,9 +594,12 @@ export default function Menu() {
                     </div>
                   )}
 
-                  <p className="text-brand-dark/60 text-xs sm:text-sm leading-relaxed font-light line-clamp-3 font-sans">{item.description}</p>
+                  {/* Suggestion that a click opens the full description */}
+                  <p className="mt-auto pt-3 flex items-center gap-1.5 text-brand-green-700/70 group-hover:text-brand-green-700 text-[11px] sm:text-xs font-semibold font-sans transition-colors">
+                    <Info className="w-3.5 h-3.5" /> Click pentru descriere completă
+                  </p>
                 </div>
-              </motion.div>
+              </motion.button>
             ))}
           </motion.div>
         </AnimatePresence>
@@ -302,6 +621,89 @@ export default function Menu() {
           </div>
         </motion.div>
       </div>
+
+      {/* Item detail modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <Dialog static open={!!selectedItem} onClose={() => setSelectedItem(null)} className="relative z-50">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-brand-dark/50 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            <div className="fixed inset-0 flex items-center justify-center p-4 sm:p-6">
+              <DialogPanel className="relative w-full max-w-lg">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 24 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 24 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="relative w-full max-h-[90vh] overflow-y-auto rounded-3xl bg-brand-cream-50 shadow-2xl shadow-brand-dark/30"
+              >
+                <button
+                  type="button"
+                  onClick={() => setSelectedItem(null)}
+                  aria-label="Închide"
+                  className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-brand-cream-50/90 backdrop-blur text-brand-dark/70 hover:text-brand-green-700 border border-brand-green-700/10 flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {selectedItem.image && (
+                  <div className="w-full h-56 sm:h-64 overflow-hidden">
+                    <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
+                  </div>
+                )}
+
+                <div className="p-6 sm:p-8">
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <DialogTitle className="text-2xl sm:text-3xl font-extrabold text-brand-green-700 font-serif lowercase leading-tight">
+                      {selectedItem.name}
+                    </DialogTitle>
+                    <span className="text-brand-green-700 font-bold text-base whitespace-nowrap mt-1">{selectedItem.price}</span>
+                  </div>
+
+                  {selectedItem.tag && (
+                    <span className={`inline-block text-[11px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider mb-4 ${tagColors[selectedItem.tag] ?? "bg-brand-cream-200 text-brand-dark/60"}`}>
+                      {selectedItem.tag}
+                    </span>
+                  )}
+
+                  <p className="text-brand-dark/70 text-sm sm:text-base leading-relaxed font-light font-sans mb-6">{selectedItem.description}</p>
+
+                  {selectedItem.macros && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                      <div className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-brand-green-700/10 border border-brand-green-700/10">
+                        <Flame className="w-5 h-5 text-brand-green-700 mb-1" />
+                        <span className="text-brand-green-700 font-bold text-sm">{selectedItem.macros.calories} kcal</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-brand-cream-200/50 border border-brand-green-700/5">
+                        <Beef className="w-5 h-5 text-red-700/80 mb-1" />
+                        <span className="text-brand-dark/80 font-semibold text-sm">{selectedItem.macros.protein}</span>
+                        <span className="text-brand-dark/50 text-[11px] font-medium">Proteine</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-brand-cream-200/50 border border-brand-green-700/5">
+                        <Wheat className="w-5 h-5 text-amber-700/80 mb-1" />
+                        <span className="text-brand-dark/80 font-semibold text-sm">{selectedItem.macros.carbs}</span>
+                        <span className="text-brand-dark/50 text-[11px] font-medium">Carbohidrați</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center text-center p-3 rounded-xl bg-brand-cream-200/50 border border-brand-green-700/5">
+                        <Nut className="w-5 h-5 text-amber-700 mb-1" />
+                        <span className="text-brand-dark/80 font-semibold text-sm">{selectedItem.macros.fat}</span>
+                        <span className="text-brand-dark/50 text-[11px] font-medium">Grăsimi</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+              </DialogPanel>
+            </div>
+          </Dialog>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
