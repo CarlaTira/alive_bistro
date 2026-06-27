@@ -367,10 +367,12 @@ function CategoryBar({
   categories,
   activeCategory,
   onSelect,
+  compact,
 }: {
   categories: MenuCategory[]
   activeCategory: string
   onSelect: (id: string) => void
+  compact: boolean
 }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canLeft, setCanLeft] = useState(false)
@@ -394,11 +396,11 @@ function CategoryBar({
   }
 
   return (
-    <div className="relative w-screen ml-[50%] -translate-x-1/2 mb-10 bg-brand-cream-200/60 border-y border-brand-green-700/10 shadow-inner shadow-brand-green-700/5">
+    <div className="relative w-full mb-10 bg-brand-cream-200/60 border-y border-brand-green-700/10 shadow-inner shadow-brand-green-700/5">
       <div
         ref={scrollRef}
         onScroll={updateArrows}
-        className="flex gap-2.5 overflow-x-auto py-3 px-6 md:px-10 scroll-pl-6 md:scroll-pl-10 scroll-pr-6 md:scroll-pr-10 snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className={`flex gap-2.5 overflow-x-auto px-6 md:px-10 scroll-pl-6 md:scroll-pl-10 scroll-pr-6 md:scroll-pr-10 snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden transition-[padding] duration-300 ease-out ${compact ? "py-1.5" : "py-3"}`}
       >
         {categories.map((cat) => (
           <button
@@ -465,6 +467,36 @@ export default function Menu() {
   const [activeCategory, setActiveCategory] = useState(menuData[0].categories[0].id)
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null)
 
+  // Whether the sticky menu nav has collapsed into its compact state.
+  // Driven by a simple scroll threshold (with hysteresis) instead of a per-frame value so the
+  // transition is animated smoothly by CSS rather than re-rendering on every scroll frame.
+  const navSentinelRef = useRef<HTMLDivElement>(null)
+  const stickyNavRef = useRef<HTMLDivElement>(null)
+  const listAnchorRef = useRef<HTMLDivElement>(null)
+  const [navCompact, setNavCompact] = useState(false)
+
+  useEffect(() => {
+    const NAV_OFFSET = 64 // sticky top offset — tucks the bar flush beneath the fixed header
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const el = navSentinelRef.current
+        if (!el) return
+        const top = el.getBoundingClientRect().top
+        // Hysteresis: collapse a bit after the stick point, expand a bit before it,
+        // so tiny scroll jitters near the threshold don't cause flickering.
+        setNavCompact((prev) => (prev ? top < NAV_OFFSET + 24 : top < NAV_OFFSET - 8))
+      })
+    }
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
   const activeGroupObj = menuData.find((g) => g.id === activeGroup)!
   const activeCategoryObj =
     activeGroupObj.categories.find((c) => c.id === activeCategory) ?? activeGroupObj.categories[0]
@@ -475,6 +507,24 @@ export default function Menu() {
     setActiveGroup(groupId)
     setActiveCategory(group.categories[0].id)
   }
+
+  // When the visible list changes (group or category), scroll up so the first product of the
+  // new list sits just below the sticky nav. Skips the very first render so the page doesn't
+  // jump on mount.
+  const firstListRender = useRef(true)
+  useEffect(() => {
+    if (firstListRender.current) {
+      firstListRender.current = false
+      return
+    }
+    const anchor = listAnchorRef.current
+    if (!anchor) return
+    const STICKY_OFFSET = 64 // matches the sticky nav's top offset
+    const navHeight = stickyNavRef.current?.offsetHeight ?? 0
+    const target =
+      anchor.getBoundingClientRect().top + window.scrollY - STICKY_OFFSET - navHeight - 12
+    window.scrollTo({ top: Math.max(0, target), behavior: "smooth" })
+  }, [activeCategory, activeGroup])
 
   return (
     <section id="menu" className="min-h-screen py-24 px-6 bg-brand-cream-100 overflow-x-clip">
@@ -494,42 +544,65 @@ export default function Menu() {
           </p>
         </motion.div>
 
-        {/* Group toggle (Food / Drinks) */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex p-1.5 rounded-full bg-brand-cream-200/60 border border-brand-green-700/10">
-            {menuData.map((group) => (
-              <button
-                key={group.id}
-                onClick={() => handleGroupChange(group.id)}
-                className={`flex items-center gap-2 px-7 py-2.5 rounded-full text-sm font-bold transition-all duration-200 font-sans ${
-                  activeGroup === group.id
-                    ? "bg-brand-green-700 text-brand-cream-50 shadow-md shadow-brand-green-700/20"
-                    : "text-brand-green-700/70 hover:text-brand-green-700"
-                }`}
-              >
-                {group.icon}
-                {group.label}
-              </button>
-            ))}
+        {/* Sentinel: marks where the nav becomes sticky so we can measure scroll progress */}
+        <div ref={navSentinelRef} aria-hidden className="h-0" />
+
+        {/* Sticky menu navigation: both the Food/Drinks toggle and the category chips
+            stick to the top together and progressively shrink the gap between them on scroll.
+            Full-bleed via margin (no transform) so it doesn't jitter while scrolling, and a
+            fully opaque background so no content shows through. It tucks flush beneath the
+            fixed header, leaving no transparent strip. */}
+        <div ref={stickyNavRef} className="sticky top-16 z-30 w-screen ml-[calc(50%-50vw)] bg-brand-cream-100">
+          {/* Group toggle (Food / Drinks) */}
+          <div
+            className="max-w-4xl mx-auto px-6 flex justify-center transition-[padding,margin] duration-300 ease-out"
+            style={{
+              paddingTop: navCompact ? 16 : 22,
+              marginBottom: navCompact ? 2 : 28,
+            }}
+          >
+            <div
+              className="inline-flex p-1.5 rounded-full bg-brand-cream-200/60 border border-brand-green-700/10 origin-top transition-transform duration-300 ease-out"
+              style={{ transform: navCompact ? "scale(0.88)" : "scale(1)" }}
+            >
+              {menuData.map((group) => (
+                <button
+                  key={group.id}
+                  onClick={() => handleGroupChange(group.id)}
+                  className={`flex items-center gap-2 px-7 py-2.5 rounded-full text-sm font-bold transition-all duration-200 font-sans ${
+                    activeGroup === group.id
+                      ? "bg-brand-green-700 text-brand-cream-50 shadow-md shadow-brand-green-700/20"
+                      : "text-brand-green-700/70 hover:text-brand-green-700"
+                  }`}
+                >
+                  {group.icon}
+                  {group.label}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {/* Category chips — full-width bar with dynamic scroll arrows */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeGroup}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CategoryBar
+                categories={activeGroupObj.categories}
+                activeCategory={activeCategory}
+                onSelect={setActiveCategory}
+                compact={navCompact}
+              />
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* Category chips — full-width bar with dynamic scroll arrows */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeGroup}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CategoryBar
-              categories={activeGroupObj.categories}
-              activeCategory={activeCategory}
-              onSelect={setActiveCategory}
-            />
-          </motion.div>
-        </AnimatePresence>
+        {/* Anchor marking the top of the product list (scroll target on list change) */}
+        <div ref={listAnchorRef} aria-hidden className="h-0" />
 
         {/* Menu Items */}
         <AnimatePresence mode="wait">
